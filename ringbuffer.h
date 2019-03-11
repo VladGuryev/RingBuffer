@@ -10,7 +10,7 @@ private:
     std::size_t ringBufferCapacity;
     std::array<T, N> adaptedArray;
     std::size_t current_idx = 0;
-   // std::size_t current_size = 0;
+    std::size_t current_size = 0;
 public:
     RingBuffer(): ringBufferCapacity(N)
     {
@@ -21,11 +21,17 @@ public:
     {
         current_idx %= ringBufferCapacity;
         adaptedArray[current_idx++] = element;
+
+        current_size %= 2 * ringBufferCapacity;
+        current_size++;
     }
 
     std::size_t size()
     {
-        return adaptedArray.size();
+        if(current_size < ringBufferCapacity)
+            return current_size;
+        else
+            return ringBufferCapacity;
     }
     bool empty()
     {
