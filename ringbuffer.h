@@ -10,8 +10,7 @@ private:
     std::size_t ringBufferCapacity;
     std::array<T, N> adaptedArray;
     std::size_t current_idx = 0;
-    std::size_t current_size = 0;
-    T* data;
+   // std::size_t current_size = 0;
 public:
     RingBuffer(): ringBufferCapacity(N)
     {
@@ -50,6 +49,10 @@ public:
     T& back()
     {
         return adaptedArray.back();
+    }
+
+    T* data(){
+        return adaptedArray.data();
     }
 
     const T& front() const
