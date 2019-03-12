@@ -7,5 +7,10 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
-    ringbuffer.h \
-    test_runner.h
+    test_runner.h \
+    profile.h \
+    ringbufdeq.h \
+    ringbufarr.h
+
+
+QMAKE_CXXFLAGS += -O3

@@ -4,7 +4,7 @@
 #include <deque>
 
 template<typename T>
-class RingBuffer
+class RingBufDeq
 {
 private:
     std::size_t buffer_capacity = 0;
@@ -12,7 +12,7 @@ private:
     std::size_t current_idx = 0;
     std::size_t current_size = 0;
 public:
-    RingBuffer(std::size_t capacity): buffer_capacity(capacity)
+    RingBufDeq(std::size_t capacity): buffer_capacity(capacity)
     {
         adapted_deque.resize(buffer_capacity);
     }
