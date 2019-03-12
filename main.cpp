@@ -3,7 +3,10 @@
 #include "test_runner.h"
 #include "profile.h"
 #include "ringbufarr.h"
+#include <boost/circular_buffer.hpp>
+
 using namespace std;
+using namespace boost;
 
 int main()
 {
@@ -13,8 +16,12 @@ int main()
     v1.resize(N);
     v2.resize(N);
 
-    RingBufDeq<int> buffer(N);
-    LOG_DURATION("Total time"); //deque 26909ms -O,  deque -O3 2815ms, array 8543ms -O, array -O3 2291ms
+    circular_buffer<int> buffer(N);
+    LOG_DURATION("Total time");
+    // deque: 26909ms -O,  2815ms -O3;
+    // array: 8543ms -O,  2291ms -O3;
+    // boost::circle_bufer: 7834ms -O, 1575ms -O3;
+
     for(int i = 0; i < 100; ++i){
         for (int i = 0; i < 20 * N; i++) {
             buffer.push_back(i);
