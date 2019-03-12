@@ -1,94 +1,99 @@
 #ifndef RINGBUFFER_H
 #define RINGBUFFER_H
 
-#include <array>
+#include <deque>
 
-template<typename T, std::size_t N>
+template<typename T>
 class RingBuffer
 {
 private:
-    std::size_t ringBufferCapacity;
-    std::array<T, N> adaptedArray;
+    std::size_t buffer_capacity = 0;
+    std::deque<T> adapted_deque;
     std::size_t current_idx = 0;
     std::size_t current_size = 0;
 public:
-    RingBuffer(): ringBufferCapacity(N)
+    RingBuffer(std::size_t capacity): buffer_capacity(capacity)
     {
-        //adaptedArray.fill(T());
+        adapted_deque.resize(buffer_capacity);
     }
 
     void push_back(T element)
     {
-        current_idx %= ringBufferCapacity;
-        adaptedArray[current_idx++] = element;
+        static std::size_t counter = 0;
+        current_idx %= buffer_capacity;
 
-        current_size %= 2 * ringBufferCapacity;
-        current_size++;
+        if (counter != buffer_capacity) {
+            adapted_deque[current_idx++] = element;
+            counter++;
+            current_size++;
+        } else {
+            adapted_deque[current_idx++] = element;
+        }
     }
 
     std::size_t size()
     {
-        if(current_size < ringBufferCapacity)
-            return current_size;
-        else
-            return ringBufferCapacity;
+        return current_size;
     }
     bool empty()
     {
-        return adaptedArray.empty();
+        return current_size == 0;
+    }
+    bool full(){
+        return current_size == buffer_capacity ? true : false;
     }
 
-    T& operator[](size_t idx)
+    T& operator[](std::size_t idx)
     {
-        return adaptedArray[idx];
+        return adapted_deque[idx];
     }
 
-    T& operator[](size_t idx) const
+    T& operator[](std::size_t idx) const
     {
-        return adaptedArray[idx];
+        return adapted_deque[idx];
     }
 
     T& front()
     {
-        return adaptedArray.front();
+        return adapted_deque.front();
     }
     T& back()
     {
-        return adaptedArray.back();
+        return adapted_deque.back();
     }
 
     T* data(){
-        return adaptedArray.data();
+        return adapted_deque.data();
     }
 
     const T& front() const
     {
-        return adaptedArray.front();
+        return adapted_deque.front();
     }
     const T& back() const
     {
-        return adaptedArray.back();
+        return adapted_deque.back();
     }
 
     std::size_t capacity(){
-        return adaptedArray.max_size();
+        return buffer_capacity;
     }
 
-    typename std::array<T, N>::iterator begin()
+    typename std::deque<T>::iterator begin()
     {
-        return adaptedArray.begin();
+        return adapted_deque.begin();
     }
-    typename std::array<T, N>::iterator end()
+    typename std::deque<T>::iterator end()
     {
-        return adaptedArray.begin() + adaptedArray.size();
+        return adapted_deque.begin() + current_size;
     }
-    typename std::array<T, N>::const_iterator begin() const
+    typename std::deque<T>::const_iterator begin() const
     {
-        return adaptedArray.begin();
+        return adapted_deque.begin();
     }
-    typename std::array<T, N>::const_iterator end() const
+    typename std::deque<T>::const_iterator end() const
     {
-        return adaptedArray.begin() + adaptedArray.size();
+        return adapted_deque.begin() + current_size;
     }
 };
 
